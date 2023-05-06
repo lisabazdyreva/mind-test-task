@@ -1,0 +1,11 @@
+.add-product-form__wrapper {
+  width: 100%;
+}
+
+.add-product-form {
+  display: flex;
+  width: 300px;
+  margin: 0 auto;
+  flex-direction: column;
+  gap: 20px;
+}

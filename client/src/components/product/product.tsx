@@ -1,5 +1,6 @@
-import { useAddToCartMutation } from "../../services/cart.ts";
 import { useState } from "react";
+
+import { useAddToCartMutation, useGetCartQuery } from "../../services/cart.ts";
 import { IProduct } from "../../types/product.ts";
 
 interface IProductProps {
@@ -8,7 +9,9 @@ interface IProductProps {
 
 const Product = ({ product }: IProductProps) => {
   const [cartId, setCartId] = useState(localStorage.getItem("userCartId"));
-  const [addToCart, { isLoading }] = useAddToCartMutation();
+  const [addToCart] = useAddToCartMutation();
+  const { data: cartItems } = useGetCartQuery(Number(cartId));
+
   const onClickAddToCartButtonHandler = async () => {
     if (!cartId) {
       const cartItem = await addToCart({ productId: product.id, quantity: 1 });
@@ -25,14 +28,21 @@ const Product = ({ product }: IProductProps) => {
     }
   };
 
+  const isAlreadyInCart = Boolean(
+    cartItems?.filter((cartItem) => cartItem.productId === product.id).length
+  );
+
   return (
     <div>
-      {isLoading ? "Loading" : "added to cart"}
       <h2>{product.name}</h2>
       <p>{product.price}</p>
 
-      <button onClick={onClickAddToCartButtonHandler} type="button">
-        Add to Cart
+      <button
+        onClick={onClickAddToCartButtonHandler}
+        type="button"
+        disabled={isAlreadyInCart}
+      >
+        {isAlreadyInCart ? "Already in" : "Add to"} Cart
       </button>
     </div>
   );

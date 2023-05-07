@@ -1,5 +1,6 @@
-import Product from "../product/product.tsx";
 import "./product-list.css";
+
+import Product from "../product/product.tsx";
 import { useGetProductsQuery } from "../../services/products.ts";
 
 const ProductList = () => {

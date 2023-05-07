@@ -31,7 +31,10 @@ const AddProductForm = () => {
 
   const onSubmitAddProductFormHandler = async (evt: FormEvent) => {
     evt.preventDefault();
-    await createProduct({ name, price, image: "url" });
+
+    if (name && price) {
+      await createProduct({ name, price, image: "url" });
+    }
   };
 
   return (

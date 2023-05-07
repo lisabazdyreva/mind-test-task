@@ -1,4 +1,5 @@
 const { Order } = require("../models/index");
+const bot = require("../tg-bot/bot");
 
 class OrderController {
   async getAllOrders(req, res) {
@@ -13,9 +14,15 @@ class OrderController {
   }
 
   async postOrder(req, res) {
-    const { cartId, customer_telephone } = req.body;
+    const { cartId, customer_telephone, sum } = req.body;
 
     const order = await Order.create({ cartId, customer_telephone });
+
+    await bot.sendOrder({
+      id: order.id,
+      sum,
+    });
+
     return res.json(order);
   }
 }

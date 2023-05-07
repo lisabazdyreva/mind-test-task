@@ -4,6 +4,6 @@ const router = new Router();
 const orderController = require("../controllers/order.controller");
 
 router.get("/", orderController.getAllOrders);
-router.post("/cart", orderController.postOrder);
+router.post("/", orderController.postOrder);
 
 module.exports = router;

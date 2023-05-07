@@ -8,6 +8,9 @@ const Order = sequelize.define("order", {
     allowNull: false,
     defaultValue: "+79260589068",
   },
+  customer_chat_id: {
+    type: DataTypes.STRING, // TODO попробовать реализовать получение всех заказов
+  },
 });
 
 module.exports = Order;

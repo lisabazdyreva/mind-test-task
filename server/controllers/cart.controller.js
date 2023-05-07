@@ -17,7 +17,6 @@ class CartController {
     const removedCartItem = await CartItem.destroy({
       where: { cartId },
     });
-
     return res.json(removedCartItem);
   }
 

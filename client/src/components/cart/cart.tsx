@@ -1,13 +1,15 @@
 import CartItem from "../cart-item/cart-item.tsx";
 import { useGetCartQuery, useRemoveCartMutation } from "../../services/cart.ts";
 import { ChangeEvent, FormEvent, useState } from "react";
+import { usePostOrderMutation } from "../../services/order.ts";
 
 const Cart = () => {
   const id = Number(localStorage.getItem("userCartId")) || 0;
   const [phoneNumber, setPhoneNumber] = useState("");
-  const { data: cartItems, isLoading } = useGetCartQuery(id);
 
+  const { data: cartItems, isLoading } = useGetCartQuery(id);
   const [removeCart] = useRemoveCartMutation();
+  const [postOrder] = usePostOrderMutation();
 
   const onChangePhoneNumberInputHandler = (evt: ChangeEvent) => {
     const target = evt.target as HTMLInputElement;
@@ -23,8 +25,17 @@ const Cart = () => {
     return <div>No products :(</div>;
   }
 
-  const onSubmitCartFormHandler = (evt: FormEvent) => {
+  const onSubmitCartFormHandler = async (evt: FormEvent) => {
     evt.preventDefault();
+    const sum = cartItems.reduce((accum, current) => {
+      accum += current.product.price * current.quantity;
+      return accum;
+    }, 0);
+
+    if (phoneNumber) {
+      await postOrder({ cartId: 1, customer_phone: "+8989", sum });
+      await onResetCartFormHandler();
+    }
   };
 
   const onResetCartFormHandler = async () => {

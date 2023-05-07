@@ -1,36 +1,30 @@
 const { Cart } = require("../models/");
-const { CartItem } = require("../models");
+const { CartItem, Order, Product } = require("../models");
 
 class CartController {
   async getCart(req, res) {
-    const productsInCart = await CartItem.findAll();
-    return res.json(productsInCart);
-  }
-
-  async addToCart(req, res) {
-    let cartId;
-    const { productId, quantity, userCartId } = req.body;
-
-    if (!userCartId) {
-      const cart = await Cart.create();
-      cartId = cart.id;
-    } else {
-      cartId = userCartId;
-    }
-
-    const product = await CartItem.create({
-      productId,
-      cartId,
-      quantity,
+    const { userId } = req.query;
+    const cartItemsInCart = await CartItem.findAll({
+      where: { cartId: userId },
+      include: [Product],
     });
-    return res.json(product);
+
+    return res.json(cartItemsInCart);
   }
 
-  async removeFromCart(req, res) {
+  async removeCart(req, res) {
     const { cartId } = req.body;
-    // await CartItem.destroy;
+    const removedCartItem = await CartItem.destroy({
+      where: { cartId },
+    });
 
-    await res.json({ message: "hi from cart" });
+    return res.json(removedCartItem);
+  }
+
+  async postCart(req, res) {
+    const { customer_telephone } = req.body;
+
+    const order = await Order.create({ customer_telephone });
   }
 }
 

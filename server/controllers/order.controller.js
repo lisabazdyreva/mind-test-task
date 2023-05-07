@@ -6,6 +6,12 @@ class OrderController {
     return res.json(orders);
   }
 
+  async getCustomerOrders(req, res) {
+    const { customer_telephone } = req.body;
+    const orders = await Order.findAll({ where: { customer_telephone } });
+    return res.json(orders);
+  }
+
   async postOrder(req, res) {
     const { cartId, customer_telephone } = req.body;
 

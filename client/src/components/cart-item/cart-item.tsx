@@ -4,7 +4,7 @@ import {
 } from "../../services/cart.ts";
 
 import "./cart-item.css";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 interface ICartItemProps {
   cartItem: {
@@ -28,12 +28,20 @@ const CartItem = ({ cartItem }: ICartItemProps) => {
   const [quantityCounter, setQuantityCounter] = useState(quantity);
 
   const onClickRemoveFromCartHandler = async () => {
-    await removeFromCart({ userCartId: cartItem.id });
+    await removeFromCart({
+      userId: localStorage.getItem("userId"),
+      cartItemId: cartItem.id,
+    });
   };
 
   const onClickAddQuantityButtonHandler = async () => {
     if (quantityCounter < 50) {
       setQuantityCounter(quantityCounter + 1);
+      await updateQuantity({
+        cartItemId: cartItem.id,
+        quantity: quantityCounter + 1,
+        userId: localStorage.getItem("userId"),
+      });
       //   TODO debounce
     }
   };
@@ -41,20 +49,14 @@ const CartItem = ({ cartItem }: ICartItemProps) => {
   const onClickSubtractQuantityButtonHandler = async () => {
     if (quantityCounter > 1) {
       setQuantityCounter(quantityCounter - 1);
+      await updateQuantity({
+        cartItemId: cartItem.id,
+        quantity: quantityCounter - 1,
+        userId: localStorage.getItem("userId"),
+      });
       //   TODO debounce
     }
   };
-
-  useEffect(() => {
-    const postQuantity = async () => {
-      await updateQuantity({
-        cartItemId: cartItem.id,
-        quantity: quantityCounter,
-      });
-    };
-
-    postQuantity();
-  }, [quantityCounter]);
 
   return (
     <li>
@@ -68,13 +70,6 @@ const CartItem = ({ cartItem }: ICartItemProps) => {
       <button onClick={onClickSubtractQuantityButtonHandler}>-</button>
       <span>{quantityCounter}</span>
       <button onClick={onClickAddQuantityButtonHandler}>+</button>
-      {/*{cartItem.cartId} product id: {cartItem.productId} quantity: name*/}
-      {/*<span>*/}
-      {/*  <button>Add 1</button>*/}
-      {/*  {cartItem.quantity}*/}
-      {/*  <button>Minus One</button>*/}
-      {/*</span>*/}
-      {/*<span>{price * quantity}</span>*/}
       <button onClick={onClickRemoveFromCartHandler} type="button">
         Delete from cart
       </button>

@@ -8,7 +8,7 @@ export const productsApi = api.injectEndpoints({
       query: () => ({ url: "/products" }),
       providesTags: (result = []) => [
         ...result.map(({ id }) => ({ type: "Products", id } as const)),
-        { type: "Products" as const, id: "LIST" },
+        { type: "Products" as const, id: "PRODUCTS" },
       ],
     }),
     createProduct: build.mutation<IProduct, Partial<IProduct>>({

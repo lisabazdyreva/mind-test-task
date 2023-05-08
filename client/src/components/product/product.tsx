@@ -1,40 +1,19 @@
-import { useState } from "react";
-
-import { useAddToCartMutation, useGetCartQuery } from "../../services/cart.ts";
 import { IProduct } from "../../types/product.ts";
 
 interface IProductProps {
   product: IProduct;
+  onCreateUserHandler: (id: number) => void;
+  isAlreadyInCart: (id: number) => boolean;
 }
 
-const Product = ({ product }: IProductProps) => {
-  const userCartId = Number(localStorage.getItem("userCartId"));
-  const [cartId, setCartId] = useState(userCartId);
-
-  const [addToCart, { isLoading, isError }] = useAddToCartMutation();
-  const { data: cartItems } = useGetCartQuery(cartId);
-
-  const onClickAddToCartButtonHandler = async () => {
-    if (cartId === 0) {
-      const cartItem = await addToCart({
-        productId: product.id,
-        quantity: 1,
-      });
-      const { data }: any = cartItem; //TODO any
-      setCartId(data.cartId);
-      localStorage.setItem("userCartId", data.cartId);
-    } else {
-      await addToCart({
-        productId: product.id,
-        quantity: 1,
-        userCartId: cartId,
-      });
-    }
+const Product = ({
+  product,
+  onCreateUserHandler,
+  isAlreadyInCart,
+}: IProductProps) => {
+  const onClickAddToCartButtonHandler = () => {
+    onCreateUserHandler(product.id);
   };
-
-  const isAlreadyInCart = Boolean(
-    cartItems?.filter((cartItem) => cartItem.productId === product.id).length
-  );
 
   return (
     <div>
@@ -44,12 +23,12 @@ const Product = ({ product }: IProductProps) => {
       <button
         onClick={onClickAddToCartButtonHandler}
         type="button"
-        disabled={isAlreadyInCart}
+        disabled={isAlreadyInCart(product.id)}
       >
-        {isAlreadyInCart ? "Already in" : "Add to"} Cart
+        cart
       </button>
-      {isLoading && "Trying add to cart..."}
-      {isError && "Some error occurred. We cannot add this product to cart"}
+      {/*{isLoading && "Trying add to cart..."}*/}
+      {/*{isError && "Some error occurred. We cannot add this product to cart"}*/}
     </div>
   );
 };

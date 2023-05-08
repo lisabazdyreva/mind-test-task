@@ -13,7 +13,10 @@ export const cartApi = api.injectEndpoints({
       },
       invalidatesTags: ["Cart"],
     }),
-    removeFromCart: build.mutation<ICart, { userCartId: number }>({
+    removeFromCart: build.mutation<
+      ICart,
+      { userId: string | null; cartItemId: number }
+    >({
       query(body) {
         return {
           url: "/cart-item",
@@ -25,7 +28,7 @@ export const cartApi = api.injectEndpoints({
     }),
     updateQuantity: build.mutation<
       ICart,
-      { cartItemId: number; quantity: number }
+      { cartItemId: number; quantity: number; userId: string | null }
     >({
       query(body) {
         return {
@@ -36,15 +39,16 @@ export const cartApi = api.injectEndpoints({
       },
       invalidatesTags: ["Cart"],
     }),
-    getCart: build.query<Cart, number>({
-      query: (id) => ({ url: "/cart", params: { userId: id } }),
-
+    getCart: build.query<Cart, string | null>({
+      query: (userId) => {
+        return { url: "/cart", params: { userId } };
+      },
       providesTags: (result = []) => [
         ...result.map(({ id }) => ({ type: "Cart", id } as const)),
-        { type: "Cart" as const, id: "CART" },
+        { type: "Cart" as const, id: "Cart" },
       ],
     }),
-    removeCart: build.mutation<CartItems, { cartId: number }>({
+    removeCart: build.mutation<CartItems, { userId: string | null }>({
       query(body) {
         return {
           url: "/cart",

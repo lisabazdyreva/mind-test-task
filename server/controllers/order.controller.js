@@ -1,4 +1,4 @@
-const { Order } = require("../models/index");
+const { Order, User, Cart } = require("../models/index");
 const bot = require("../tg-bot/bot");
 const ApiError = require("../error/ApiError");
 
@@ -16,12 +16,15 @@ class OrderController {
 
   async postOrder(req, res, next) {
     try {
-      const { cartId, customer_telephone, sum } = req.body;
+      const { customer_telephone, sum, userId } = req.body;
+
+      const user = await User.findOne({ where: { client_id: userId } });
+      const cart = await Cart.findOne({ where: { id: user.cartId } });
 
       const customer_chat_id = process.env.CHAT_ID;
 
       const order = await Order.create({
-        cartId,
+        cartId: cart.id,
         customer_telephone,
         customer_chat_id,
       });

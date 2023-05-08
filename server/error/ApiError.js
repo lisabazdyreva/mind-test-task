@@ -9,7 +9,7 @@ class ApiError extends Error {
     if (additionalText.length) {
       return new ApiError(
         404,
-        `Already have a ${additionalText} in products. Create unique name.`
+        `Already have a ${additionalText} in products. Create unique name.` // todo в удалении
       );
     }
     return new ApiError(404, message);

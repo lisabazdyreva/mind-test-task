@@ -13,11 +13,24 @@ export const cartApi = api.injectEndpoints({
       },
       invalidatesTags: ["Cart"],
     }),
-    removeFromCart: build.mutation<ICart, { cartItemId: number }>({
+    removeFromCart: build.mutation<ICart, { userCartId: number }>({
       query(body) {
         return {
           url: "/cart-item",
           method: "DELETE",
+          body,
+        };
+      },
+      invalidatesTags: ["Cart"],
+    }),
+    updateQuantity: build.mutation<
+      ICart,
+      { cartItemId: number; quantity: number }
+    >({
+      query(body) {
+        return {
+          url: "/cart-item",
+          method: "PATCH",
           body,
         };
       },
@@ -50,6 +63,7 @@ export const cartApi = api.injectEndpoints({
 export const {
   useAddToCartMutation,
   useRemoveFromCartMutation,
+  useUpdateQuantityMutation,
   useGetCartQuery,
   useRemoveCartMutation,
   useGetErrorProneQuery,

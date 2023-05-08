@@ -1,6 +1,10 @@
-import { useRemoveFromCartMutation } from "../../services/cart.ts";
+import {
+  useRemoveFromCartMutation,
+  useUpdateQuantityMutation,
+} from "../../services/cart.ts";
 
 import "./cart-item.css";
+import { useEffect, useState } from "react";
 
 interface ICartItemProps {
   cartItem: {
@@ -13,25 +17,57 @@ interface ICartItemProps {
 }
 
 const CartItem = ({ cartItem }: ICartItemProps) => {
-  const [removeFromCart, { isLoading }] = useRemoveFromCartMutation();
+  const [removeFromCart, { isLoading, isError }] = useRemoveFromCartMutation();
+  const [
+    updateQuantity,
+    { isLoading: isUpdateQuantityLoading, isError: isUpdateQuantityError },
+  ] = useUpdateQuantityMutation();
 
   const { product, quantity } = cartItem;
   const { name, price } = product;
+  const [quantityCounter, setQuantityCounter] = useState(quantity);
 
   const onClickRemoveFromCartHandler = async () => {
-    await removeFromCart({ cartItemId: cartItem.id });
+    await removeFromCart({ userCartId: cartItem.id });
   };
 
-  if (isLoading) {
-    return <div>is loading</div>;
-  }
+  const onClickAddQuantityButtonHandler = async () => {
+    if (quantityCounter < 50) {
+      setQuantityCounter(quantityCounter + 1);
+      //   TODO debounce
+    }
+  };
+
+  const onClickSubtractQuantityButtonHandler = async () => {
+    if (quantityCounter > 1) {
+      setQuantityCounter(quantityCounter - 1);
+      //   TODO debounce
+    }
+  };
+
+  useEffect(() => {
+    const postQuantity = async () => {
+      await updateQuantity({
+        cartItemId: cartItem.id,
+        quantity: quantityCounter,
+      });
+    };
+
+    postQuantity();
+  }, [quantityCounter]);
 
   return (
     <li>
+      {isLoading && "is loading"}
+      {isError && "is error"}
+      {isUpdateQuantityLoading && "is loading"}
+      {isUpdateQuantityError && "is error"}
       <span>
         {name}, {price}
       </span>
-      <span>{quantity}</span>
+      <button onClick={onClickSubtractQuantityButtonHandler}>-</button>
+      <span>{quantityCounter}</span>
+      <button onClick={onClickAddQuantityButtonHandler}>+</button>
       {/*{cartItem.cartId} product id: {cartItem.productId} quantity: name*/}
       {/*<span>*/}
       {/*  <button>Add 1</button>*/}

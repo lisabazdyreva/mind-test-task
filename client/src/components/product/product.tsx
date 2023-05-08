@@ -8,22 +8,26 @@ interface IProductProps {
 }
 
 const Product = ({ product }: IProductProps) => {
-  const [cartId, setCartId] = useState(localStorage.getItem("userCartId"));
-  const [addToCart] = useAddToCartMutation();
-  const { data: cartItems } = useGetCartQuery(Number(cartId));
+  const userCartId = Number(localStorage.getItem("userCartId"));
+  const [cartId, setCartId] = useState(userCartId);
+
+  const [addToCart, { isLoading, isError }] = useAddToCartMutation();
+  const { data: cartItems } = useGetCartQuery(cartId);
 
   const onClickAddToCartButtonHandler = async () => {
-    if (!cartId) {
-      const cartItem = await addToCart({ productId: product.id, quantity: 1 });
+    if (cartId === 0) {
+      const cartItem = await addToCart({
+        productId: product.id,
+        quantity: 1,
+      });
       const { data }: any = cartItem; //TODO any
-
       setCartId(data.cartId);
-      await localStorage.setItem("userCartId", data.cartId);
+      localStorage.setItem("userCartId", data.cartId);
     } else {
       await addToCart({
         productId: product.id,
         quantity: 1,
-        userCartId: Number(cartId),
+        userCartId: cartId,
       });
     }
   };
@@ -44,6 +48,8 @@ const Product = ({ product }: IProductProps) => {
       >
         {isAlreadyInCart ? "Already in" : "Add to"} Cart
       </button>
+      {isLoading && "Trying add to cart..."}
+      {isError && "Some error occurred. We cannot add this product to cart"}
     </div>
   );
 };

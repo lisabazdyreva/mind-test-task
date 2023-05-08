@@ -9,7 +9,7 @@ const AddProductForm = () => {
   const [price, setPrice] = useState(0);
   const [image, setImage] = useState(""); //TODO image addition
 
-  const [createProduct, { isLoading }] = useCreateProductMutation();
+  const [createProduct, { isLoading, error }] = useCreateProductMutation();
 
   const onChangeNameInputHandler = (evt: ChangeEvent) => {
     const target = evt.target as HTMLInputElement;
@@ -39,7 +39,8 @@ const AddProductForm = () => {
 
   return (
     <div className="add-product-form__wrapper">
-      {isLoading ? "Adding..." : "Product added"}
+      {error && JSON.parse(JSON.stringify(error)).data.message}
+      {isLoading && "Loading..."}
       <form
         className="add-product-form"
         onSubmit={onSubmitAddProductFormHandler}
@@ -50,6 +51,7 @@ const AddProductForm = () => {
           type="text"
           placeholder="Name of product"
           value={name}
+          autoComplete="off"
           onChange={onChangeNameInputHandler}
         />
 

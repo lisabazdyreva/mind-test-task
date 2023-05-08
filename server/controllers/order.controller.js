@@ -1,5 +1,6 @@
 const { Order } = require("../models/index");
 const bot = require("../tg-bot/bot");
+const ApiError = require("../error/ApiError");
 
 class OrderController {
   async getAllOrders(req, res) {
@@ -7,23 +8,33 @@ class OrderController {
     return res.json(orders);
   }
 
-  async getCustomerOrders(req, res) {
-    const { customer_telephone } = req.body;
-    const orders = await Order.findAll({ where: { customer_telephone } });
-    return res.json(orders);
-  }
+  // async getCustomerOrders(req, res) {
+  //   const { customer_telephone } = req.body;
+  //   const orders = await Order.findAll({ where: { customer_telephone } });
+  //   return res.json(orders);
+  // } TODO для бота
 
-  async postOrder(req, res) {
-    const { cartId, customer_telephone, sum } = req.body;
+  async postOrder(req, res, next) {
+    try {
+      const { cartId, customer_telephone, sum } = req.body;
 
-    const order = await Order.create({ cartId, customer_telephone });
+      const customer_chat_id = process.env.CHAT_ID;
 
-    await bot.sendOrder({
-      id: order.id,
-      sum,
-    });
+      const order = await Order.create({
+        cartId,
+        customer_telephone,
+        customer_chat_id,
+      });
 
-    return res.json(order);
+      await bot.sendOrder({
+        id: order.id,
+        sum,
+      });
+
+      return res.json(order);
+    } catch (e) {
+      next(ApiError.badRequest(e.message)); //TODO доделать
+    }
   }
 }
 

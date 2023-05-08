@@ -5,7 +5,13 @@ class ApiError extends Error {
     this.message = message;
   }
 
-  static badRequest(message) {
+  static badRequest(message, additionalText = "") {
+    if (additionalText.length) {
+      return new ApiError(
+        404,
+        `Already have a ${additionalText} in products. Create unique name.`
+      );
+    }
     return new ApiError(404, message);
   }
 

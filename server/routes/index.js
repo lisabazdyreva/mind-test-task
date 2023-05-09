@@ -13,4 +13,8 @@ router.use("/products", productRouter);
 router.use("/order", orderRouter);
 router.use("/user", userRouter);
 
+router.use("/", (req, res) => {
+  res.send("Express on Vercel");
+});
+
 module.exports = router;

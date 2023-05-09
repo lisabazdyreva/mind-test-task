@@ -11,24 +11,25 @@ const Product = ({
   onCreateUserHandler,
   isAlreadyInCart,
 }: IProductProps) => {
+  const { id, name, price } = product;
   const onClickAddToCartButtonHandler = () => {
-    onCreateUserHandler(product.id);
+    onCreateUserHandler(id);
   };
+
+  const isInCart = isAlreadyInCart(product.id);
 
   return (
     <div>
-      <h2>{product.name}</h2>
-      <p>{product.price}</p>
+      <h2>{name}</h2>
+      <p>{price}</p>
 
       <button
         onClick={onClickAddToCartButtonHandler}
         type="button"
-        disabled={isAlreadyInCart(product.id)}
+        disabled={isInCart}
       >
-        cart
+        {isInCart ? "Already in " : "Add to "}cart
       </button>
-      {/*{isLoading && "Trying add to cart..."}*/}
-      {/*{isError && "Some error occurred. We cannot add this product to cart"}*/}
     </div>
   );
 };

@@ -5,6 +5,9 @@ import {
 
 import "./cart-item.css";
 import { useState } from "react";
+import { InfoStatusMessage, Quantity } from "../../utils/const.ts";
+import { useDebounce } from "../../hooks/useDebounce.ts";
+import { getErrorMessage } from "../../utils/utils.ts";
 
 interface ICartItemProps {
   cartItem: {
@@ -17,15 +20,14 @@ interface ICartItemProps {
 }
 
 const CartItem = ({ cartItem }: ICartItemProps) => {
-  const [removeFromCart, { isLoading, isError }] = useRemoveFromCartMutation();
-  const [
-    updateQuantity,
-    { isLoading: isUpdateQuantityLoading, isError: isUpdateQuantityError },
-  ] = useUpdateQuantityMutation();
-
   const { product, quantity } = cartItem;
   const { name, price } = product;
+
   const [quantityCounter, setQuantityCounter] = useState(quantity);
+
+  const [removeFromCart, { isLoading, isError }] = useRemoveFromCartMutation();
+  const [updateQuantity, { error: updateQuantityError }] =
+    useUpdateQuantityMutation();
 
   const onClickRemoveFromCartHandler = async () => {
     await removeFromCart({
@@ -34,36 +36,36 @@ const CartItem = ({ cartItem }: ICartItemProps) => {
     });
   };
 
-  const onClickAddQuantityButtonHandler = async () => {
-    if (quantityCounter < 50) {
-      setQuantityCounter(quantityCounter + 1);
-      await updateQuantity({
-        cartItemId: cartItem.id,
-        quantity: quantityCounter + 1,
-        userId: localStorage.getItem("userId"),
-      });
-      //   TODO debounce
+  const changeQuantity = (value: number) => {
+    setQuantityCounter(value);
+    debouncedQuantity(value);
+  };
+
+  const updateQuantityH = async (value: number) =>
+    await updateQuantity({
+      cartItemId: cartItem.id,
+      quantity: value,
+      userId: localStorage.getItem("userId"),
+    });
+
+  const debouncedQuantity = useDebounce(updateQuantityH, 500);
+
+  const onClickAddQuantityButtonHandler = () => {
+    if (quantityCounter < Quantity.Max) {
+      changeQuantity(quantityCounter + 1);
     }
   };
 
-  const onClickSubtractQuantityButtonHandler = async () => {
-    if (quantityCounter > 1) {
-      setQuantityCounter(quantityCounter - 1);
-      await updateQuantity({
-        cartItemId: cartItem.id,
-        quantity: quantityCounter - 1,
-        userId: localStorage.getItem("userId"),
-      });
-      //   TODO debounce
+  const onClickSubtractQuantityButtonHandler = () => {
+    if (quantityCounter > Quantity.Min) {
+      changeQuantity(quantityCounter - 1);
     }
   };
-
   return (
     <li>
-      {isLoading && "is loading"}
-      {isError && "is error"}
-      {isUpdateQuantityLoading && "is loading"}
-      {isUpdateQuantityError && "is error"}
+      {isLoading && InfoStatusMessage.Loading}
+      {isError && InfoStatusMessage.Error}
+      {updateQuantityError && <p>{getErrorMessage(updateQuantityError)}</p>}
       <span>
         {name}, {price}
       </span>

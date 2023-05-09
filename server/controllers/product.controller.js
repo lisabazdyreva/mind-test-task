@@ -1,17 +1,26 @@
 const { Product } = require("../models/index");
 const ApiError = require("../error/ApiError");
 
+const path = require("path");
+const { v4: uuidv4 } = require("uuid");
+
 class ProductController {
   async createProduct(req, res, next) {
     try {
-      const { name, price, image } = req.body;
+      const { name, price } = req.body;
+      const { image } = req.files;
 
-      const product = await Product.create({ name, price, image });
+      const id = uuidv4();
+      const format = image.name.split(".").reverse()[0];
+
+      let fileName = id + "." + format;
+      await image.mv(path.resolve(__dirname, "..", "static", fileName));
+
+      const product = await Product.create({ name, price, image: fileName });
       return res.json(product);
     } catch (e) {
       if ("SequelizeUniqueConstraintError" === e.name) {
-        // не уверена, что это правильный способ поймать ошибку уникального поля, но не нашла другой способ
-        next(ApiError.badRequest(e.message, req.body.name));
+        next(ApiError.noUniqueValueRequest(req.body.name)); // не уверена, что это правильный способ поймать ошибку уникального поля, но не нашла другой способ
       } else {
         next(ApiError.badRequest(e.message));
       }

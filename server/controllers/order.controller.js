@@ -19,6 +19,10 @@ class OrderController {
       const { customer_telephone, sum, userId } = req.body;
 
       const user = await User.findOne({ where: { client_id: userId } });
+
+      if (!user) {
+        next(ApiError.paramsBadRequest("do not change your user id, please"));
+      }
       const cart = await Cart.findOne({ where: { id: user.cartId } });
 
       const customer_chat_id = process.env.CHAT_ID;

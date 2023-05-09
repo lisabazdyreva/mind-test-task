@@ -11,7 +11,7 @@ class CartItemController {
       });
 
       if (!user) {
-        throw new Error("Do not try to change your id."); //TODO add everywhere
+        next(ApiError.paramsBadRequest("do not change your user id, please"));
       }
 
       const product = await CartItem.create({
@@ -29,9 +29,13 @@ class CartItemController {
   async removeFromCart(req, res, next) {
     try {
       const { userId, cartItemId } = req.body;
+      const user = await User.findOne({ where: { client_id: userId } });
+
+      if (!user) {
+        next(ApiError.paramsBadRequest("do not change your user id, please"));
+      }
 
       try {
-        await User.findOne({ where: { client_id: userId } });
         const removedCartItem = await CartItem.destroy({
           where: { id: cartItemId },
         });
@@ -39,10 +43,10 @@ class CartItemController {
         if (removedCartItem > 0) {
           return res.json(removedCartItem);
         } else {
-          return res.status(400).json({ message: "Cannot delete now" });
+          next(ApiError.internal("can not remove mow"));
         }
       } catch (e) {
-        next(ApiError.badRequest(e.message, "Do not change your id"));
+        next(ApiError.badRequest(e.message, "Do not change your id")); // todo too much?
       }
     } catch (e) {
       next(ApiError.badRequest(e.message));
@@ -54,6 +58,10 @@ class CartItemController {
       const { userId, cartItemId, quantity } = req.body;
 
       const user = await User.findOne({ where: { client_id: userId } });
+
+      if (!user) {
+        next(ApiError.paramsBadRequest("do not change your user id, please"));
+      }
 
       const cartId = await user.cartId;
 

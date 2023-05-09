@@ -5,21 +5,18 @@ class CartController {
   async getCart(req, res, next) {
     try {
       const { userId } = req.query;
-
       const user = await User.findOne({ where: { client_id: userId } });
 
-      if (user) {
-        const cartItemsInCart = await CartItem.findAll({
-          where: { cartId: user.cartId },
-          include: [Product],
-        });
-        return res.json(cartItemsInCart);
+      if (!user) {
+        next(ApiError.paramsBadRequest("do not change your user id, please"));
       }
-      // else {
-      //   return res
-      //     .status(400)
-      //     .json({ message: "do not change your user id, please" });
-      // }
+
+      const cartItemsInCart = await CartItem.findAll({
+        where: { cartId: user.cartId },
+        include: [Product],
+      });
+
+      return res.json(cartItemsInCart);
     } catch (e) {
       next(ApiError.badRequest(e.message));
     }
@@ -31,6 +28,10 @@ class CartController {
 
       const user = await User.findOne({ where: { client_id: userId } });
 
+      if (!user) {
+        next(ApiError.paramsBadRequest("do not change your user id, please"));
+      }
+
       const removedCartItem = await CartItem.destroy({
         where: { cartId: user.cartId },
       });
@@ -39,10 +40,9 @@ class CartController {
         await Cart.destroy({ where: { id: user.cartId } });
         return res.json(removedCartItem);
       } else {
-        return res.status(500).json({ message: "remove error" });
+        next(ApiError.internal("remove error"));
       }
     } catch (e) {
-      console.log(e);
       next(ApiError.badRequest(e.message));
     }
   }

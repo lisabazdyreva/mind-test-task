@@ -11,12 +11,13 @@ export const productsApi = api.injectEndpoints({
         { type: "Products" as const, id: "PRODUCTS" },
       ],
     }),
-    createProduct: build.mutation<IProduct, Partial<IProduct>>({
+    createProduct: build.mutation<IProduct, FormData>({
       query(body) {
         return {
           url: "/products/create",
           method: "POST",
           body,
+          formData: true,
         };
       },
       invalidatesTags: ["Products"],

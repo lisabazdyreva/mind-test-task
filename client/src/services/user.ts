@@ -2,13 +2,6 @@ import { api } from "./api";
 
 export const userApi = api.injectEndpoints({
   endpoints: (build) => ({
-    // getProducts: build.query<Products, void>({
-    //   query: () => ({ url: "/products" }),
-    //   providesTags: (result = []) => [
-    //     ...result.map(({ id }) => ({ type: "Products", id } as const)),
-    //     { type: "Products" as const, id: "LIST" },
-    //   ],
-    // }),
     createUser: build.mutation<void, { userId: string }>({
       query(body) {
         return {
@@ -19,7 +12,7 @@ export const userApi = api.injectEndpoints({
       },
       invalidatesTags: ["Products"],
     }),
-    removeUser: build.mutation<void, { userId: string }>({
+    removeUser: build.mutation<void, { userId: string | null }>({
       query(body) {
         return {
           url: "/user/",

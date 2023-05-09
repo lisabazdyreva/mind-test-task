@@ -1,44 +1,36 @@
+import { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+import { skipToken } from "@reduxjs/toolkit/dist/query/react";
+
 import "./product-list.css";
 
 import Product from "../product/product.tsx";
-import { useGetProductsQuery } from "../../services/products.ts";
-import { Link } from "react-router-dom";
-import { useState } from "react";
+
+import Modal from "../modals/modal.tsx";
+
 import { useAddToCartMutation, useGetCartQuery } from "../../services/cart.ts";
 import { useCreateUserMutation } from "../../services/user.ts";
-import { skipToken } from "@reduxjs/toolkit/dist/query/react";
-import { v4 as uuidv4 } from "uuid";
-import cartItem from "../cart-item/cart-item.tsx";
 
-const ProductList = () => {
-  const { data: products, isLoading, isError } = useGetProductsQuery();
+import { IProduct } from "../../types/product.ts";
 
+import useModal from "../../hooks/useModal.ts";
+import { InfoStatusMessage } from "../../utils/const.ts";
+import { getErrorMessage } from "../../utils/utils.ts";
+
+interface IProductsListProps {
+  products: IProduct[];
+}
+
+const ProductList = ({ products }: IProductsListProps) => {
+  const { isModalOpen, openModal } = useModal();
   const userCartId = localStorage.getItem("userId");
+
   const [userId, setCartId] = useState(userCartId);
 
-  const [addToCart, { isLoading: isAddCartLoading, isError: isAddCartError }] =
+  const { data: cartItems } = useGetCartQuery(userId ?? skipToken);
+  const [addToCart, { isLoading: isAddCartLoading, error, isSuccess }] =
     useAddToCartMutation();
-  const [createUser, { isLoading: isUserLoading }] = useCreateUserMutation();
-  const { data: cartItems, isLoading: isCartItemsLoading } = useGetCartQuery(
-    userId ?? skipToken
-  ); //
-
-  if (isLoading) {
-    return <div>Loading</div>;
-  }
-
-  if (isError) {
-    return <div>Some error occurred. Try later.</div>;
-  }
-
-  if (!products?.length) {
-    return (
-      <div>
-        No products added. <br />
-        <Link to="/products/create">Create your first product</Link>
-      </div>
-    );
-  }
+  const [createUser] = useCreateUserMutation();
 
   const onCreateUserHandler = async (productId: number) => {
     if (!localStorage.getItem("userId")) {
@@ -53,20 +45,25 @@ const ProductList = () => {
       productId,
       quantity: 1,
       userId: localStorage.getItem("userId"),
-    });
+    })
+      .unwrap()
+      .then(() => {
+        openModal();
+      })
+      .catch(() => {
+        openModal();
+      });
   };
 
-  const isAlreadyInCart = (productId: number) => {
-    return cartItems
-      ? Boolean(
-          cartItems.filter((cartItem) => cartItem.product.id === productId)
-            .length
-        )
-      : false;
-  };
+  const isAlreadyInCart = (productId: number) =>
+    !!cartItems &&
+    !!cartItems.filter((cartItem) => cartItem.product.id === productId).length;
 
   return (
     <div className="product-list">
+      {isAddCartLoading && InfoStatusMessage.Loading}
+      {isSuccess && isModalOpen && <Modal text="Product was added to cart" />}
+      {error && isModalOpen && <Modal text={getErrorMessage(error)} />}
       {products.map((product) => (
         <Product
           key={product.id}

@@ -1,12 +1,131 @@
+import { FormEvent, useState } from "react";
+import { skipToken } from "@reduxjs/toolkit/dist/query/react";
+
 import Cart from "../../components/cart/cart.tsx";
 import Header from "../../components/header/header.tsx";
+import CartForm from "../../components/cart-form/cart-form.tsx";
 
+import { useGetCartQuery, useRemoveCartMutation } from "../../services/cart.ts";
+import { usePostOrderMutation } from "../../services/order.ts";
+import { useRemoveUserMutation } from "../../services/user.ts";
+import { InfoContentMessage, InfoStatusMessage } from "../../utils/const.ts";
+import { getErrorMessage } from "../../utils/utils.ts";
+import Modal from "../../components/modals/modal.tsx";
+import useModal from "../../hooks/useModal.ts";
+
+// todo не всегда отрабатывает удаление корзины, если быстро был добавлен продукт
+// не обновляется корзина после посыла
 const CartPage = () => {
+  const id = localStorage.getItem("userId");
+  const [userId, setUserId] = useState(id);
+
+  const { isModalOpen, openModal } = useModal();
+
+  const {
+    data: cartItems,
+    isLoading: isCartItemsLoading,
+    error: cartItemsError,
+  } = useGetCartQuery(userId ?? skipToken);
+
+  const [
+    postOrder,
+    {
+      isLoading: isOrderPostLoading,
+      isSuccess: isOrderPostSuccess,
+      error: orderError,
+    },
+  ] = usePostOrderMutation();
+
+  const [
+    removeCart,
+    { isLoading: isCartRemoving, isError: isCartRemoveError },
+  ] = useRemoveCartMutation();
+
+  const [removeUser] = useRemoveUserMutation();
+
+  if (isCartRemoveError) {
+    return <div>{InfoStatusMessage.Error}</div>;
+  }
+
+  const onSubmitCartFormHandler = async (
+    evt: FormEvent,
+    phoneNumber: string,
+    clearInput: () => void
+  ) => {
+    evt.preventDefault();
+    // todo переименовать
+
+    const totalPrice =
+      cartItems?.reduce((accum, current) => {
+        accum += current.product.price * current.quantity;
+        return accum;
+      }, 0) || 0;
+
+    await postOrder({
+      userId: localStorage.getItem("userId"),
+      customer_phone: phoneNumber,
+      sum: totalPrice,
+    })
+      .unwrap()
+      .then(async () => {
+        openModal();
+        clearInput();
+        return await removeUser({ userId: localStorage.getItem("userId") });
+      })
+      .then(async () => {
+        localStorage.clear();
+        resetUserId();
+      })
+      .catch(() => {
+        openModal();
+      });
+  };
+
+  const onResetCartFormHandler = async (clearInput: () => void) => {
+    await removeCart({ userId: id })
+      .unwrap()
+      .then(async () => {
+        clearInput();
+        return await removeUser({ userId: id });
+      })
+      .then(() => {
+        resetUserId();
+        localStorage.clear();
+      });
+  };
+
+  const resetUserId = () => {
+    setUserId(null);
+  };
+
   return (
     <div>
       <Header />
       <h2>Cart</h2>
-      <Cart />
+      {isCartItemsLoading && InfoStatusMessage.Loading}
+      {cartItemsError && <p>{getErrorMessage(cartItemsError)}</p>}
+      {(!cartItems || !cartItems.length) && (
+        <>
+          <br />
+          {InfoContentMessage.EmptyProducts}
+        </>
+      )}
+      {!!cartItems?.length && !isOrderPostSuccess && (
+        <Cart cartItems={cartItems} />
+      )}
+      {orderError && isModalOpen && (
+        <Modal text={getErrorMessage(orderError)} />
+      )}
+      {isOrderPostSuccess && isModalOpen && (
+        <Modal text={InfoContentMessage.PostedOrder} />
+      )}
+      <CartForm
+        onSubmitCartFormHandler={onSubmitCartFormHandler}
+        onResetCartFormHandler={onResetCartFormHandler}
+        isCartFull={Boolean(cartItems?.length) || false}
+        isSending={isOrderPostLoading}
+        isRemoving={isCartRemoving}
+      />
     </div>
   );
 };

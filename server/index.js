@@ -8,7 +8,7 @@ app.use(cors());
 
 app.use(express.json());
 
-app.use("/", router);
+app.use("", router);
 // app.get("/product", (req, res) => {
 //   res.json({ message: "OKKKK" });
 // });

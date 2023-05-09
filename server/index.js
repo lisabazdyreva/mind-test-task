@@ -24,23 +24,22 @@ app.use("/api", router);
 
 app.use(errorHandler);
 
-const start = async () => {
-  try {
-    await sequelize.authenticate();
-    await sequelize.sync();
+// const start = async () => {
+//   try {
+//     await sequelize.authenticate();
+//     await sequelize.sync();
+//
+//     // bot.getBot().on("message", async (msg) => {
+//     //   bot.setChatId(msg.chat.id);
+//     //
+//     //   await bot.getBot().sendMessage(bot.getChatId(), "Hello!");
+//     // });
+//
+//
+//   } catch (e) {
+//     console.log(e);
+//   }
+// };
 
-    // bot.getBot().on("message", async (msg) => {
-    //   bot.setChatId(msg.chat.id);
-    //
-    //   await bot.getBot().sendMessage(bot.getChatId(), "Hello!");
-    // });
-
-    app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
-  } catch (e) {
-    console.log(e);
-  }
-};
-
-start();
-
+app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
 module.exports = app;

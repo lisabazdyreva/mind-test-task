@@ -1,4 +1,4 @@
-const { User, Cart } = require("../models/index");
+const { User, Cart } = require("../models");
 const ApiError = require("../error/ApiError");
 
 // todo обработка ошибок

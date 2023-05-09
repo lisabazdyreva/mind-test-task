@@ -1,4 +1,4 @@
-const { Product } = require("../models/index");
+const { Product } = require("../models");
 const ApiError = require("../error/ApiError");
 
 const path = require("path");

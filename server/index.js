@@ -7,7 +7,7 @@ const fileUpload = require("express-fileupload");
 const cors = require("cors");
 const bot = require("./tg-bot/bot");
 
-const router = require("./routes/index");
+const router = require("./routes");
 const errorHandler = require("./middleware/error-handling.middleware");
 const path = require("path");
 

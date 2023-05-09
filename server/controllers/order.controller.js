@@ -1,4 +1,4 @@
-const { Order, User, Cart } = require("../models/index");
+const { Order, User, Cart } = require("../models");
 const bot = require("../tg-bot/bot");
 const ApiError = require("../error/ApiError");
 

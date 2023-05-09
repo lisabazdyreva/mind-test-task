@@ -26,11 +26,11 @@ class OrderController {
         customer_chat_id,
       });
 
-      // await bot.sendOrder({
-      //   id: order.id,
-      //   sum,
-      // }); todo вернуть потом бота
-
+      await bot.sendOrder({
+        id: order.id,
+        sum,
+      });
+      // todo вернуть потом бота
       return res.json(order);
     } catch (e) {
       next(ApiError.badRequest(e.message));

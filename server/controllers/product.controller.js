@@ -11,14 +11,12 @@ class ProductController {
       const { image } = req.files;
 
       const id = uuidv4();
-      // const format = image.name.split(".").reverse()[0];
-
-      // let fileName = id + "." + format;
-      let fileName = id + ".jpg";
+      const format = image.name.split(".").reverse()[0];
+      let fileName = id + "." + format;
 
       image.mv(path.resolve(__dirname, "..", "static", fileName));
 
-      const product = await Product.create({ name, price, image: fileName }); // todo
+      const product = await Product.create({ name, price, image: fileName });
       return res.json(product);
     } catch (e) {
       if ("SequelizeUniqueConstraintError" === e.name) {

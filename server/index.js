@@ -1,10 +1,9 @@
 const express = require("express");
 const app = express();
+const router = require("./routes/index.js");
 
 app.use(express.json());
-app.get("/", (req, res) => {
-  res.send("Express on Vercel");
-});
+app.use("/", router);
 
 // app.use(errorHandler);
 

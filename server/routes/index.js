@@ -1,5 +1,5 @@
 const Router = require("express");
-const router = express.Router();
+const router = new Router();
 
 const cartRouter = require("./cart.router");
 const cartItemRouter = require("./cart-item.router");

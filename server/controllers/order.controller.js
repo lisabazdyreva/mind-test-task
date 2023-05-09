@@ -1,6 +1,8 @@
 const { Order, User, Cart } = require("../models");
 const ApiError = require("../error/ApiError");
 
+const bot = require("../tg-bot/bot");
+
 class OrderController {
   async getAllOrders(req, res) {
     const orders = await Order.findAll();

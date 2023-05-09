@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "http://localhost:5000/api", // TODO Почему не получилось в переменные вынести
+  baseUrl: "https://mind-test-task.onrender.com/api", // TODO Почему не получилось в переменные вынести
 });
 
 const baseQueryWithRetry = retry(baseQuery, { maxRetries: 2 });

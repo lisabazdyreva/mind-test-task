@@ -1,4 +1,5 @@
 const { Order, User, Cart } = require("../models");
+const bot = require("../tg-bot/bot");
 const ApiError = require("../error/ApiError");
 
 class OrderController {
@@ -30,6 +31,11 @@ class OrderController {
         cartId: cart.id,
         customer_telephone,
         customer_chat_id,
+      });
+
+      await bot.sendOrder({
+        id: order.id,
+        sum,
       });
 
       return res.json(order);

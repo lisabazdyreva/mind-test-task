@@ -1,4 +1,4 @@
-require("dotenv").config();
+// require("dotenv").config();
 
 const express = require("express");
 const sequelize = require("./db");
@@ -26,7 +26,7 @@ app.get("/", (req, res) => {
   res.send("Express on Vercel");
 });
 
-app.use(errorHandler);
+// app.use(errorHandler);
 
 // const start = async () => {
 //   try {

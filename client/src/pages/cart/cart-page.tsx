@@ -62,7 +62,7 @@ const CartPage = () => {
 
     await postOrder({
       userId: localStorage.getItem("userId"),
-      customer_phone: phoneNumber,
+      customer_telephone: phoneNumber,
       sum: totalPrice,
     })
       .unwrap()

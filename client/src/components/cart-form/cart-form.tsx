@@ -31,13 +31,13 @@ const CartForm = ({
     setIsPhoneNumberValid(false);
   };
 
-  const onSubmitCartFormHandlerH = async (evt: FormEvent) => {
+  const onSubmitCartFormHandler = async (evt: FormEvent) => {
     if (isPhoneNumberValid) {
       await submitForm(evt, phoneNumber, clearInput);
     }
   };
 
-  const onResetCartFormHandlerH = async () => {
+  const onResetCartFormHandler = async () => {
     await resetForm(clearInput);
   };
 
@@ -70,8 +70,8 @@ const CartForm = ({
   return (
     <form
       className="cart-form"
-      onSubmit={onSubmitCartFormHandlerH}
-      onReset={onResetCartFormHandlerH}
+      onSubmit={onSubmitCartFormHandler}
+      onReset={onResetCartFormHandler}
     >
       <label className="cart-form__label" htmlFor="user_phone_number">
         Your phone number

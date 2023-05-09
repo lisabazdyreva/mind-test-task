@@ -16,7 +16,7 @@ class ProductController {
       let fileName = id + "." + format;
       await image.mv(path.resolve(__dirname, "..", "static", fileName));
 
-      const product = await Product.create({ name, price, image }); // todo
+      const product = await Product.create({ name, price, image: fileName }); // todo
       return res.json(product);
     } catch (e) {
       if ("SequelizeUniqueConstraintError" === e.name) {

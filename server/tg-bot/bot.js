@@ -1,23 +1,10 @@
 const TelegramBot = require("node-telegram-bot-api");
-
-const token = "5741442438:AAFI5sunnuulipxVZsYfVW41-_qSRveM3Kw";
+require("dotenv").config();
 
 class Bot {
   constructor() {
-    this.bot = new TelegramBot(token, { polling: true });
+    this.bot = new TelegramBot(process.env.BOT_TOKEN, { polling: true });
     this.chatId = process.env.CHAT_ID;
-  }
-
-  getBot() {
-    return this.bot;
-  }
-
-  getChatId() {
-    return this.chatId;
-  }
-
-  setChatId(id) {
-    this.chatId = id;
   }
 
   async sendOrder({ id, sum }) {

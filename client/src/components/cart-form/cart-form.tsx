@@ -1,25 +1,31 @@
 import { ChangeEvent, FormEvent, useState } from "react";
+
+import "./cart-form.css";
+
 import { InfoContentMessage, InfoStatusMessage } from "../../utils/const.ts";
 
 interface ICartFormProps {
-  onSubmitCartFormHandler: (
+  submitForm: (
     evt: FormEvent,
     phoneNumber: string,
     clearInput: () => void
   ) => void;
-  onResetCartFormHandler: (clearInput: () => void) => void;
+  resetForm: (clearInput: () => void) => void;
   isCartFull: boolean;
   isSending: boolean;
   isRemoving: boolean;
 }
 
 const CartForm = ({
-  onSubmitCartFormHandler,
-  onResetCartFormHandler,
+  submitForm,
+  resetForm,
   isCartFull,
   isSending,
   isRemoving,
 }: ICartFormProps) => {
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [isPhoneNumberValid, setIsPhoneNumberValid] = useState(false);
+
   const clearInput = () => {
     setPhoneNumber("");
     setIsPhoneNumberValid(false);
@@ -27,11 +33,13 @@ const CartForm = ({
 
   const onSubmitCartFormHandlerH = async (evt: FormEvent) => {
     if (isPhoneNumberValid) {
-      await onSubmitCartFormHandler(evt, phoneNumber, clearInput);
+      await submitForm(evt, phoneNumber, clearInput);
     }
   };
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [isPhoneNumberValid, setIsPhoneNumberValid] = useState(false);
+
+  const onResetCartFormHandlerH = async () => {
+    await resetForm(clearInput);
+  };
 
   const onChangePhoneNumberInputHandler = (evt: ChangeEvent) => {
     const value = (evt.target as HTMLInputElement).value;
@@ -48,21 +56,28 @@ const CartForm = ({
     setIsPhoneNumberValid(/^(\+?7|8)9\d{9}$/.test(cleanedNumber));
   };
 
-  const onResetCartFormHandlerH = async () => {
-    await onResetCartFormHandler(clearInput);
-  };
-
   const isPostOrderDisabled = !isCartFull || !phoneNumber.length;
   const isButtonSubmitDisabled =
     !isCartFull || isSending || isRemoving || !isPhoneNumberValid;
   const isButtonResetDisabled = !isCartFull || isSending || isRemoving;
 
-  const disableWarningElement = <p>{InfoContentMessage.EmptyCart}</p>;
+  const disableWarningElement = (
+    <p className="cart-form__validity-message cart-form__validity-message--success">
+      {InfoContentMessage.EmptyCart}
+    </p>
+  );
 
   return (
-    <form onSubmit={onSubmitCartFormHandlerH} onReset={onResetCartFormHandlerH}>
-      <label htmlFor="user_phone_number">Where to post order</label>
+    <form
+      className="cart-form"
+      onSubmit={onSubmitCartFormHandlerH}
+      onReset={onResetCartFormHandlerH}
+    >
+      <label className="cart-form__label" htmlFor="user_phone_number">
+        Your phone number
+      </label>
       <input
+        className="cart-form__input"
         id="user_phone_number"
         type="tel"
         placeholder="Enter your phone number, please"
@@ -70,14 +85,33 @@ const CartForm = ({
         onChange={onChangePhoneNumberInputHandler}
         onInput={onInputPhoneNumberInputHandler}
       />
-      <p>{isPhoneNumberValid ? "Correct" : "Format: +79.... or 89..."}</p>
 
-      <button type="reset" disabled={isButtonResetDisabled}>
-        {isRemoving ? InfoStatusMessage.Removing : "Remove cart"}
-      </button>
-      <button type="submit" disabled={isButtonSubmitDisabled}>
-        {isSending ? InfoStatusMessage.Sending : "Send cart"}
-      </button>
+      {isPhoneNumberValid ? (
+        <p className="cart-form__validity-message cart-form__validity-message--success">
+          Correct
+        </p>
+      ) : (
+        <p className="cart-form__validity-message cart-form__validity-message--error">
+          Format: +79.... or 89...
+        </p>
+      )}
+
+      <div className="cart-form__button-wrapper">
+        <button
+          className="button"
+          type="reset"
+          disabled={isButtonResetDisabled}
+        >
+          {isRemoving ? InfoStatusMessage.Removing : "Remove cart"}
+        </button>
+        <button
+          className="button"
+          type="submit"
+          disabled={isButtonSubmitDisabled}
+        >
+          {isSending ? InfoStatusMessage.Sending : "Send cart"}
+        </button>
+      </div>
       {isPostOrderDisabled && disableWarningElement}
     </form>
   );

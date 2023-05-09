@@ -1,4 +1,5 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
+import { Route as RouteURL } from "./utils/const.ts";
 
 import "./app.css";
 
@@ -11,10 +12,13 @@ const App = () => {
     <div>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Navigate to="/products" />} />
-          <Route path="/products/create" element={<ProductCreatePage />} />
-          <Route path="/products" element={<ProductsPage />} />
-          <Route path="/cart" element={<CartPage />} />
+          <Route path="/" element={<Navigate to={RouteURL.Products} />} />
+          <Route
+            path={RouteURL.ProductsCreate}
+            element={<ProductCreatePage />}
+          />
+          <Route path={RouteURL.Products} element={<ProductsPage />} />
+          <Route path={RouteURL.Cart} element={<CartPage />} />
         </Routes>
       </BrowserRouter>
     </div>

@@ -1,11 +1,12 @@
 import { api } from "./api";
 
 import { IProduct, Products } from "../types/product.ts";
+import { ApiMethod, ApiRoute } from "../utils/const.ts";
 
 export const productsApi = api.injectEndpoints({
   endpoints: (build) => ({
     getProducts: build.query<Products, void>({
-      query: () => ({ url: "/products" }),
+      query: () => ({ url: ApiRoute.Products }),
       providesTags: (result = []) => [
         ...result.map(({ id }) => ({ type: "Products", id } as const)),
         { type: "Products" as const, id: "PRODUCTS" },
@@ -14,25 +15,15 @@ export const productsApi = api.injectEndpoints({
     createProduct: build.mutation<IProduct, FormData>({
       query(body) {
         return {
-          url: "/products/create",
-          method: "POST",
+          url: ApiRoute.CreateProduct,
+          method: ApiMethod.Post,
           body,
           formData: true,
         };
       },
       invalidatesTags: ["Products"],
     }),
-    getErrorProne: build.query<{ success: boolean }, void>({
-      query: () => "error-prone",
-    }),
   }),
 });
 
-export const {
-  useGetProductsQuery,
-  useCreateProductMutation,
-  useGetErrorProneQuery,
-} = productsApi;
-export const {
-  endpoints: { getProducts },
-} = productsApi;
+export const { useGetProductsQuery, useCreateProductMutation } = productsApi;

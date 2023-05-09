@@ -1,10 +1,11 @@
+import { useState } from "react";
 import {
   useRemoveFromCartMutation,
   useUpdateQuantityMutation,
 } from "../../services/cart.ts";
 
 import "./cart-item.css";
-import { useState } from "react";
+
 import { InfoStatusMessage, Quantity } from "../../utils/const.ts";
 import { useDebounce } from "../../hooks/useDebounce.ts";
 import { getErrorMessage } from "../../utils/utils.ts";
@@ -41,14 +42,14 @@ const CartItem = ({ cartItem }: ICartItemProps) => {
     debouncedQuantity(value);
   };
 
-  const updateQuantityH = async (value: number) =>
+  const updateQuantityAction = async (value: number) =>
     await updateQuantity({
       cartItemId: cartItem.id,
       quantity: value,
       userId: localStorage.getItem("userId"),
     });
 
-  const debouncedQuantity = useDebounce(updateQuantityH, 500);
+  const debouncedQuantity = useDebounce(updateQuantityAction, 500);
 
   const onClickAddQuantityButtonHandler = () => {
     if (quantityCounter < Quantity.Max) {

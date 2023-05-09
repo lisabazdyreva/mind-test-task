@@ -15,7 +15,9 @@ const ProductsPage = () => {
   const { data: products, isLoading, error } = useGetProductsQuery();
 
   const linkCreateProduct = (
-    <Link to={`/${Route.ProductsCreate}`}>Create your first product</Link>
+    <Link className="link" to={`${Route.ProductsCreate}`}>
+      Create your first product
+    </Link>
   );
 
   const noProductsElement = (
@@ -25,8 +27,6 @@ const ProductsPage = () => {
       {linkCreateProduct}
     </div>
   );
-
-  // todo check {(!products || !products.length) && noProductsElement}
 
   return (
     <div>

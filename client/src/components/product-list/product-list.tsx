@@ -5,7 +5,6 @@ import { skipToken } from "@reduxjs/toolkit/dist/query/react";
 import "./product-list.css";
 
 import Product from "../product/product.tsx";
-
 import Modal from "../modals/modal.tsx";
 
 import { useAddToCartMutation, useGetCartQuery } from "../../services/cart.ts";

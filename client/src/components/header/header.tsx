@@ -5,10 +5,16 @@ import { Route } from "../../utils/const.ts";
 
 const Header = () => {
   return (
-    <header>
-      <Link to={`/${Route.Products}`}>Products</Link>
-      <Link to={`/${Route.Cart}`}>Cart</Link>
-      <Link to={`/${Route.ProductsCreate}`}>Create new product</Link>
+    <header className="header">
+      <Link className="link" to={Route.Products}>
+        Products
+      </Link>
+      <Link className="link" to={Route.Cart}>
+        Cart
+      </Link>
+      <Link className="link" to={Route.ProductsCreate}>
+        Create new product
+      </Link>
     </header>
   );
 };

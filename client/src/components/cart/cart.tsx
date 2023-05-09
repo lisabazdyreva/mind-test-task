@@ -6,15 +6,9 @@ interface ICartProps {
 }
 
 const Cart = ({ cartItems }: ICartProps) => {
-  // todo бот ссылку
-
   return (
     <div>
       <h1>Your user cart id {cartItems[0]?.cartId || "none"}</h1>
-      <a href="https://t.me/mindOnlineStoreTestTaskBot">
-        To receive notification in Telegram please follow this link and then get
-        back here.
-      </a>
       <ul>
         <li>Name, price, quantity</li>
         {cartItems.map((cartItem) => (

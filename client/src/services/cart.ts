@@ -1,13 +1,14 @@
 import { api } from "./api.ts";
 import { Cart, CartItems, ICart, ICartItem } from "../types/cart-item.ts";
+import { ApiMethod, ApiRoute } from "../utils/const.ts";
 
 export const cartApi = api.injectEndpoints({
   endpoints: (build) => ({
     addToCart: build.mutation<ICartItem, Partial<ICartItem>>({
       query(body) {
         return {
-          url: "/cart-item",
-          method: "POST",
+          url: ApiRoute.CartItem,
+          method: ApiMethod.Post,
           body,
         };
       },
@@ -19,8 +20,8 @@ export const cartApi = api.injectEndpoints({
     >({
       query(body) {
         return {
-          url: "/cart-item",
-          method: "DELETE",
+          url: ApiRoute.CartItem,
+          method: ApiMethod.Delete,
           body,
         };
       },
@@ -32,8 +33,8 @@ export const cartApi = api.injectEndpoints({
     >({
       query(body) {
         return {
-          url: "/cart-item",
-          method: "PATCH",
+          url: ApiRoute.CartItem,
+          method: ApiMethod.Patch,
           body,
         };
       },
@@ -41,7 +42,7 @@ export const cartApi = api.injectEndpoints({
     }),
     getCart: build.query<Cart, string | null>({
       query: (userId) => {
-        return { url: "/cart", params: { userId } };
+        return { url: ApiRoute.Cart, params: { userId } };
       },
       providesTags: (result = []) => [
         ...result.map(({ id }) => ({ type: "Cart", id } as const)),
@@ -51,15 +52,12 @@ export const cartApi = api.injectEndpoints({
     removeCart: build.mutation<CartItems, { userId: string | null }>({
       query(body) {
         return {
-          url: "/cart",
-          method: "DELETE",
+          url: ApiRoute.Cart,
+          method: ApiMethod.Delete,
           body,
         };
       },
       invalidatesTags: ["Cart"],
-    }),
-    getErrorProne: build.query<{ success: boolean }, void>({
-      query: () => "error-prone",
     }),
   }),
 });
@@ -70,8 +68,4 @@ export const {
   useUpdateQuantityMutation,
   useGetCartQuery,
   useRemoveCartMutation,
-  useGetErrorProneQuery,
-} = cartApi;
-export const {
-  endpoints: { addToCart },
 } = cartApi;

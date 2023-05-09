@@ -1,23 +1,19 @@
 import { api } from "./api";
+import { ApiMethod, ApiRoute } from "../utils/const.ts";
+import { IPostedOrder, IReceivedOrder } from "../types/order.ts";
 
 export const productsApi = api.injectEndpoints({
   endpoints: (build) => ({
-    postOrder: build.mutation<
-      { userId: string | null; customer_phone: string; id: number },
-      { userId: string | null; customer_phone: string; sum: number }
-    >({
+    postOrder: build.mutation<IReceivedOrder, IPostedOrder>({
       query(body) {
         return {
-          url: "/order",
-          method: "POST",
+          url: ApiRoute.Order,
+          method: ApiMethod.Post,
           body,
         };
       },
     }),
-    getErrorProne: build.query<{ success: boolean }, void>({
-      query: () => "error-prone",
-    }),
   }),
 });
 
-export const { usePostOrderMutation, useGetErrorProneQuery } = productsApi;
+export const { usePostOrderMutation } = productsApi;

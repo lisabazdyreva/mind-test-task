@@ -1,12 +1,13 @@
 import { api } from "./api";
+import { ApiMethod, ApiRoute } from "../utils/const.ts";
 
 export const userApi = api.injectEndpoints({
   endpoints: (build) => ({
     createUser: build.mutation<void, { userId: string }>({
       query(body) {
         return {
-          url: "/user/",
-          method: "POST",
+          url: ApiRoute.User,
+          method: ApiMethod.Post,
           body,
         };
       },
@@ -15,21 +16,14 @@ export const userApi = api.injectEndpoints({
     removeUser: build.mutation<void, { userId: string | null }>({
       query(body) {
         return {
-          url: "/user/",
-          method: "DELETE",
+          url: ApiRoute.User,
+          method: ApiMethod.Delete,
           body,
         };
       },
       invalidatesTags: ["Products"],
     }),
-    getErrorProne: build.query<{ success: boolean }, void>({
-      query: () => "error-prone",
-    }),
   }),
 });
 
-export const {
-  useCreateUserMutation,
-  useRemoveUserMutation,
-  useGetErrorProneQuery,
-} = userApi;
+export const { useCreateUserMutation, useRemoveUserMutation } = userApi;

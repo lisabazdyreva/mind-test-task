@@ -1,8 +1,7 @@
 import { configureStore, ConfigureStoreOptions } from "@reduxjs/toolkit";
-import { api } from "../services/api.ts";
 import { setupListeners } from "@reduxjs/toolkit/query";
 
-import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+import { api } from "../services/api.ts";
 import { rtkQueryErrorLogger } from "./error-middleware.ts";
 
 export const createStore = (
@@ -19,10 +18,4 @@ export const createStore = (
 
 export const store = createStore();
 
-export type RootState = ReturnType<typeof store.getState>;
-
-export type AppDispatch = typeof store.dispatch;
-export const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector;
-export const useAppDispatch: () => AppDispatch = useDispatch;
-
-setupListeners(store.dispatch); // todo ???
+setupListeners(store.dispatch);

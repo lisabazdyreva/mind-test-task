@@ -1,7 +1,8 @@
 import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
+import { ApiRoute } from "../utils/const.ts";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "https://mind-test-task.onrender.com/api", // TODO Почему не получилось в переменные вынести
+  baseUrl: ApiRoute.Base,
 });
 
 const baseQueryWithRetry = retry(baseQuery, { maxRetries: 2 });

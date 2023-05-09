@@ -8,12 +8,6 @@ class OrderController {
     return res.json(orders);
   }
 
-  // async getCustomerOrders(req, res) {
-  //   const { customer_telephone } = req.body;
-  //   const orders = await Order.findAll({ where: { customer_telephone } });
-  //   return res.json(orders);
-  // } TODO для бота
-
   async postOrder(req, res, next) {
     try {
       const { customer_telephone, sum, userId } = req.body;
@@ -40,7 +34,7 @@ class OrderController {
 
       return res.json(order);
     } catch (e) {
-      next(ApiError.badRequest(e.message)); //TODO доделать
+      next(ApiError.badRequest(e.message));
     }
   }
 }

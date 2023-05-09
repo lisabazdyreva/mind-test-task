@@ -43,6 +43,7 @@ const AddProductForm = ({
 
     if (name.length && price && image) {
       const formData = new FormData();
+
       formData.append("name", name);
       formData.append("price", price);
       formData.append("image", image);
@@ -65,8 +66,11 @@ const AddProductForm = ({
         className="add-product-form"
         onSubmit={onSubmitAddProductFormHandlerH}
       >
-        <label htmlFor="product_name">Name*</label>
+        <label className="add-product-form__label" htmlFor="product_name">
+          Name *
+        </label>
         <input
+          className="add-product-form__input"
           id="product_name"
           type="text"
           placeholder="Name of product"
@@ -78,8 +82,9 @@ const AddProductForm = ({
           required
         />
 
-        <label htmlFor="product_price">Price*</label>
+        <label htmlFor="product_price">Price *</label>
         <input
+          className="add-product-form__input"
           id="product_price"
           type="text"
           placeholder="Price"
@@ -89,7 +94,8 @@ const AddProductForm = ({
           required
         />
 
-        <label htmlFor="product_image">Choose image</label>
+        <label htmlFor="product_image">Choose image *</label>
+        {image && <p>image added</p>}
         <input
           ref={fileInputRef}
           id="product_image"
@@ -99,7 +105,11 @@ const AddProductForm = ({
           required
         />
 
-        <button disabled={isButtonSubmitDisabled} type="submit">
+        <button
+          className="button add-product-form__button"
+          disabled={isButtonSubmitDisabled}
+          type="submit"
+        >
           {isLoading ? InfoStatusMessage.Loading : "Create"}
         </button>
       </form>

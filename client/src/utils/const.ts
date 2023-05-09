@@ -1,7 +1,7 @@
 export const Route = {
-  Products: "products",
-  Cart: "cart",
-  ProductsCreate: "products/create",
+  Products: "/products",
+  Cart: "/cart",
+  ProductsCreate: "/products/create",
 } as const;
 
 export const InfoStatusMessage = {
@@ -23,3 +23,24 @@ export const Quantity = {
   Max: 50,
   Min: 1,
 };
+
+export const APIErrorMessage = {
+  Fetch: "FETCH_ERROR",
+  Parse: "PARSING_ERROR",
+} as const;
+
+export const ApiRoute = {
+  Base: "https://mind-test-task.onrender.com/api",
+  CartItem: "/cart-item",
+  Cart: "/cart",
+  Order: "/order",
+  Products: "/products",
+  CreateProduct: "/products/create",
+  User: "/user",
+} as const;
+
+export const ApiMethod = {
+  Post: "POST",
+  Delete: "DELETE",
+  Patch: "PATCH",
+} as const;

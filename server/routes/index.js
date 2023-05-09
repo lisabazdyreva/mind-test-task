@@ -6,7 +6,6 @@ const cartItemRouter = require("./cart-item.router");
 const productRouter = require("./product.router");
 const orderRouter = require("./order.router");
 const userRouter = require("./user.router");
-const express = require("express");
 
 router.use("/cart-item", cartItemRouter);
 router.use("/cart", cartRouter);

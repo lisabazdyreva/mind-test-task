@@ -26,7 +26,7 @@ const ProductCreatePage = () => {
   return (
     <div>
       <Header />
-      <h1>Create new product</h1>
+      <h1 className="main-header">Create new product</h1>
       {error && isModalOpen && <Modal text={getErrorMessage(error)} />}
       {isSuccess && isModalOpen && (
         <Modal text={InfoContentMessage.CreatedProduct} />

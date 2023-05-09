@@ -4,17 +4,17 @@ import { skipToken } from "@reduxjs/toolkit/dist/query/react";
 import Cart from "../../components/cart/cart.tsx";
 import Header from "../../components/header/header.tsx";
 import CartForm from "../../components/cart-form/cart-form.tsx";
+import Modal from "../../components/modals/modal.tsx";
 
 import { useGetCartQuery, useRemoveCartMutation } from "../../services/cart.ts";
 import { usePostOrderMutation } from "../../services/order.ts";
 import { useRemoveUserMutation } from "../../services/user.ts";
-import { InfoContentMessage, InfoStatusMessage } from "../../utils/const.ts";
-import { getErrorMessage } from "../../utils/utils.ts";
-import Modal from "../../components/modals/modal.tsx";
+
 import useModal from "../../hooks/useModal.ts";
 
-// todo не всегда отрабатывает удаление корзины, если быстро был добавлен продукт
-// не обновляется корзина после посыла
+import { getErrorMessage } from "../../utils/utils.ts";
+import { InfoContentMessage, InfoStatusMessage } from "../../utils/const.ts";
+
 const CartPage = () => {
   const id = localStorage.getItem("userId");
   const [userId, setUserId] = useState(id);
@@ -47,13 +47,12 @@ const CartPage = () => {
     return <div>{InfoStatusMessage.Error}</div>;
   }
 
-  const onSubmitCartFormHandler = async (
+  const submitForm = async (
     evt: FormEvent,
     phoneNumber: string,
     clearInput: () => void
   ) => {
     evt.preventDefault();
-    // todo переименовать
 
     const totalPrice =
       cartItems?.reduce((accum, current) => {
@@ -73,15 +72,15 @@ const CartPage = () => {
         return await removeUser({ userId: localStorage.getItem("userId") });
       })
       .then(async () => {
-        localStorage.clear();
         resetUserId();
+        localStorage.clear();
       })
       .catch(() => {
         openModal();
       });
   };
 
-  const onResetCartFormHandler = async (clearInput: () => void) => {
+  const resetForm = async (clearInput: () => void) => {
     await removeCart({ userId: id })
       .unwrap()
       .then(async () => {
@@ -101,7 +100,7 @@ const CartPage = () => {
   return (
     <div>
       <Header />
-      <h2>Cart</h2>
+      <h1 className="main-header">Cart</h1>
       {isCartItemsLoading && InfoStatusMessage.Loading}
       {cartItemsError && <p>{getErrorMessage(cartItemsError)}</p>}
       {(!cartItems || !cartItems.length) && (
@@ -120,8 +119,8 @@ const CartPage = () => {
         <Modal text={InfoContentMessage.PostedOrder} />
       )}
       <CartForm
-        onSubmitCartFormHandler={onSubmitCartFormHandler}
-        onResetCartFormHandler={onResetCartFormHandler}
+        submitForm={submitForm}
+        resetForm={resetForm}
         isCartFull={Boolean(cartItems?.length) || false}
         isSending={isOrderPostLoading}
         isRemoving={isCartRemoving}

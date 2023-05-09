@@ -1,6 +1,6 @@
 const TelegramBot = require("node-telegram-bot-api");
 
-const token = "5741442438:AAF-FnMJJ-5Ni14s_K4OgUiitzIclrRI2bI";
+const token = "5741442438:AAFI5sunnuulipxVZsYfVW41-_qSRveM3Kw";
 
 class Bot {
   constructor() {

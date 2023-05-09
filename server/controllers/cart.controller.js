@@ -15,6 +15,7 @@ class CartController {
 
       const cartItemsInCart = await CartItem.findAll({
         where: { cartId: user.cartId },
+        order: [["id", "ASC"]],
         include: [Product],
       });
 

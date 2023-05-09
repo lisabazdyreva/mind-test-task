@@ -14,8 +14,4 @@ router.use("/products", productRouter);
 router.use("/order", orderRouter);
 router.use("/user", userRouter);
 
-router.get("/product", (req, res) => {
-  res.json({ message: "OKKKK" });
-});
-
-module.exports = router;
+router.module.exports = router;

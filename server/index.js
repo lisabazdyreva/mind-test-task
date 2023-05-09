@@ -1,9 +1,10 @@
 const express = require("express");
 const app = express();
-const router = require("./routes/index.js");
 
 app.use(express.json());
-app.use("/", router);
+app.get("/product", (req, res) => {
+  res.json({ message: "OKKKK" });
+});
 
 // app.use(errorHandler);
 

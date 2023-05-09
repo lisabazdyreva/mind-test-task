@@ -8,13 +8,13 @@ class ProductController {
   async createProduct(req, res, next) {
     try {
       const { name, price } = req.body;
-      // const { image } = req.files;
+      const { image } = req.files;
 
       const id = uuidv4();
-      // const format = image.name.split(".").reverse()[0];
+      const format = image.name.split(".").reverse()[0];
 
       let fileName = id + "." + format;
-      // await image.mv(path.resolve(__dirname, "..", "static", fileName));
+      await image.mv(path.resolve(__dirname, "..", "static", fileName));
 
       const product = await Product.create({ name, price, image: "url" }); // todo
       return res.json(product);

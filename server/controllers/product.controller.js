@@ -14,7 +14,9 @@ class ProductController {
       const format = image.name.split(".").reverse()[0];
       let fileName = id + "." + format;
 
-      image.mv(path.resolve(__dirname, "..", "static", fileName));
+      image.mv(path.resolve(__dirname, "..", "/static", fileName));
+
+      console.log(path);
 
       const product = await Product.create({ name, price, image: fileName });
       return res.json(product);

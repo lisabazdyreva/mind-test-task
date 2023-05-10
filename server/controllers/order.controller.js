@@ -28,10 +28,10 @@ class OrderController {
         customer_chat_id,
       });
 
-      // await bot.sendOrder({
-      //   id: order.id,
-      //   sum,
-      // }); todo вернуть бота
+      await bot.sendOrder({
+        id: order.id,
+        sum,
+      });
 
       return res.json(order);
     } catch (e) {

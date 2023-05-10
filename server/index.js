@@ -23,6 +23,8 @@ app.use("/api", router);
 
 app.use(errorHandler);
 
+// todo поменять переменные nv
+
 const start = async () => {
   try {
     await sequelize.authenticate();

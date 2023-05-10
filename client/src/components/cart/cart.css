@@ -1,0 +1,9 @@
+.cart {
+  margin-top: 50px;
+}
+
+.cart__product-list {
+  padding: 0;
+  margin: 0 auto;
+  list-style: none;
+}

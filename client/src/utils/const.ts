@@ -1,7 +1,7 @@
 export const Route = {
   Products: "/products",
   Cart: "/cart",
-  ProductsCreate: "/products/create",
+  ProductsCreate: "/create",
 } as const;
 
 export const InfoStatusMessage = {
@@ -30,7 +30,7 @@ export const APIErrorMessage = {
 } as const;
 
 export const ApiRoute = {
-  Base: "https://mind-test-task.onrender.com/api",
+  Base: import.meta.env.VITE_REACT_APP_API_URL,
   CartItem: "/cart-item",
   Cart: "/cart",
   Order: "/order",

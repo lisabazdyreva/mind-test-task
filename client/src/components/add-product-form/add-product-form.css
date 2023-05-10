@@ -60,10 +60,11 @@ input[type="file"]::-webkit-file-upload-button {
 
 @media (prefers-color-scheme: light) {
   input[type="file"]:before {
-    background: rgba(0, 0, 0, 0.1);
+    background: #747bff;
+    color: #ffffff;
   }
 
   .add-product-form__input {
-    background-color: rgba(0, 0, 0, 0.1);
+    border: 2px solid #747bff;
   }
 }

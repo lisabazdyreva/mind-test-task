@@ -6,6 +6,7 @@ import "./app.css";
 import ProductCreatePage from "./pages/product-create/product-create-page.tsx";
 import ProductsPage from "./pages/products/products-page.tsx";
 import CartPage from "./pages/cart/cart-page.tsx";
+import NotFoundPage from "./pages/not-found/not-found-page.tsx";
 
 const App = () => {
   return (
@@ -19,6 +20,7 @@ const App = () => {
           />
           <Route path={RouteURL.Products} element={<ProductsPage />} />
           <Route path={RouteURL.Cart} element={<CartPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>
     </div>

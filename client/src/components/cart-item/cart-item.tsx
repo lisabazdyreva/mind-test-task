@@ -63,18 +63,26 @@ const CartItem = ({ cartItem }: ICartItemProps) => {
     }
   };
   return (
-    <li>
+    <li className="product-item cart__product-item">
       {isLoading && InfoStatusMessage.Loading}
       {isError && InfoStatusMessage.Error}
       {updateQuantityError && <p>{getErrorMessage(updateQuantityError)}</p>}
-      <span>
-        {name}, {price}
+      <span className="product-item__product">
+        {name}, {price}$
       </span>
-      <button onClick={onClickSubtractQuantityButtonHandler}>-</button>
+      <button className="button" onClick={onClickSubtractQuantityButtonHandler}>
+        -
+      </button>
       <span>{quantityCounter}</span>
-      <button onClick={onClickAddQuantityButtonHandler}>+</button>
-      <button onClick={onClickRemoveFromCartHandler} type="button">
-        Delete from cart
+      <button className="button" onClick={onClickAddQuantityButtonHandler}>
+        +
+      </button>
+      <button
+        className="button"
+        onClick={onClickRemoveFromCartHandler}
+        type="button"
+      >
+        Delete
       </button>
     </li>
   );

@@ -31,7 +31,7 @@ const ProductsPage = () => {
   return (
     <div>
       <Header />
-      <h2>List of all products in system</h2>
+      <h1 className="main-header">List of all products in system</h1>
       {isLoading && <p>{InfoStatusMessage.Loading}</p>}
       {error && getErrorMessage(error)}
       {(!products || !products.length) &&

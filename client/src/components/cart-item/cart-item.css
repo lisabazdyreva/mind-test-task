@@ -1,8 +1,9 @@
-li {
+.product-item {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  margin: 0 auto;
   padding: 20px;
-}
-
-span {
-  padding-left: 50px;
-  padding-right: 50px;
 }

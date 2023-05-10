@@ -32,7 +32,7 @@ class OrderController {
         id: order.id,
         sum,
       });
-      // todo вернуть потом бота
+
       return res.json(order);
     } catch (e) {
       next(ApiError.badRequest(e.message));

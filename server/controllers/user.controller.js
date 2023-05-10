@@ -1,8 +1,6 @@
 const { User, Cart } = require("../models");
 const ApiError = require("../error/ApiError");
 
-// todo обработка ошибок
-
 class UserController {
   async checkUser(req, res) {}
 

@@ -14,7 +14,7 @@ class ProductController {
       const format = image.name.split(".").reverse()[0];
       let fileName = id + "." + format;
 
-      image.mv(path.resolve(__dirname, "..", "/static", fileName));
+      image.mv(path.join(process.cwd(), "/static", fileName));
 
       console.log(path);
 

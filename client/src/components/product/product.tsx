@@ -1,21 +1,24 @@
 import { IProduct } from "../../types/product.ts";
 
 import "./product.css";
+import { InfoStatusMessage } from "../../utils/const.ts";
 
 interface IProductProps {
   product: IProduct;
   onCreateUserHandler: (id: number) => void;
   isAlreadyInCart: (id: number) => boolean;
+  isLoading: boolean;
 }
 
 const Product = ({
   product,
   onCreateUserHandler,
   isAlreadyInCart,
+  isLoading,
 }: IProductProps) => {
   const { id, name, price, image } = product;
-  const onClickAddToCartButtonHandler = () => {
-    onCreateUserHandler(id);
+  const onClickAddToCartButtonHandler = async () => {
+    await onCreateUserHandler(id);
   };
 
   const isInCart = isAlreadyInCart(product.id);
@@ -39,7 +42,11 @@ const Product = ({
         type="button"
         disabled={isInCart}
       >
-        {isInCart ? "Already in " : "Add to "}cart
+        {isInCart
+          ? "Already in cart"
+          : isLoading
+          ? InfoStatusMessage.Loading
+          : "Add to cart"}
       </button>
     </div>
   );

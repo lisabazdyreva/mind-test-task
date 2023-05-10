@@ -13,7 +13,6 @@ import { useCreateUserMutation } from "../../services/user.ts";
 import { IProduct } from "../../types/product.ts";
 
 import useModal from "../../hooks/useModal.ts";
-import { InfoStatusMessage } from "../../utils/const.ts";
 import { getErrorMessage } from "../../utils/utils.ts";
 
 interface IProductsListProps {
@@ -60,7 +59,6 @@ const ProductList = ({ products }: IProductsListProps) => {
 
   return (
     <div className="product-list">
-      {isAddCartLoading && InfoStatusMessage.Loading}
       {isSuccess && isModalOpen && <Modal text="Product was added to cart" />}
       {error && isModalOpen && <Modal text={getErrorMessage(error)} />}
       {products.map((product) => (
@@ -69,6 +67,7 @@ const ProductList = ({ products }: IProductsListProps) => {
           product={product}
           onCreateUserHandler={onCreateUserHandler}
           isAlreadyInCart={isAlreadyInCart}
+          isLoading={isAddCartLoading}
         />
       ))}
     </div>

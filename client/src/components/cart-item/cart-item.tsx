@@ -64,7 +64,6 @@ const CartItem = ({ cartItem }: ICartItemProps) => {
   };
   return (
     <li className="product-item cart__product-item">
-      {isLoading && InfoStatusMessage.Loading}
       {isError && InfoStatusMessage.Error}
       {updateQuantityError && <p>{getErrorMessage(updateQuantityError)}</p>}
       <span className="product-item__product">
@@ -82,7 +81,7 @@ const CartItem = ({ cartItem }: ICartItemProps) => {
         onClick={onClickRemoveFromCartHandler}
         type="button"
       >
-        Delete
+        {isLoading ? InfoStatusMessage.Loading : "Delete"}
       </button>
     </li>
   );

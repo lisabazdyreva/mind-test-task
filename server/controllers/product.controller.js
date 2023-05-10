@@ -14,13 +14,9 @@ class ProductController {
       const format = image.name.split(".").reverse()[0];
       let fileName = id + "." + format;
 
-      const imagePath = path.join(process.cwd(), "/static", fileName);
+      image.mv(path.join(process.cwd(), "/static", fileName));
 
-      image.mv(imagePath);
-
-      // image.mv(path.join(process.cwd(), "/static", fileName));
-
-      const product = await Product.create({ name, price, image: imagePath });
+      const product = await Product.create({ name, price, image: fileName });
       return res.json(product);
     } catch (e) {
       if ("SequelizeUniqueConstraintError" === e.name) {

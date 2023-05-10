@@ -26,7 +26,7 @@ const Product = ({
         {image && (
           <img
             className="product-card__image"
-            src={import.meta.env.VITE_REACT_APP_API_URL + image}
+            src={import.meta.env.VITE_REACT_APP_API_URL + "static/" + image}
             alt="Фото продукта "
           />
         )}

@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 import { ApiRoute } from "../utils/const.ts";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: `${ApiRoute.Base}/api/`,
+  baseUrl: `${ApiRoute.Base}api/`,
 });
 
 const baseQueryWithRetry = retry(baseQuery, { maxRetries: 2 });
